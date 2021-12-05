@@ -1,0 +1,60 @@
+package com.taxi.core;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import javax.sql.DataSource;
+
+@Configuration
+@EnableJpaRepositories(basePackages = "com.taxi.core",
+        entityManagerFactoryRef = "taxiEntityManagerFactory",
+        transactionManagerRef = "taxiTransactionManager")
+public class TaxiDataSourceConfiguration {
+
+    @Bean
+    @Primary
+    @ConfigurationProperties("app.datasource.taxi")
+    public DataSourceProperties taxiDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Bean
+    @Primary
+    @ConfigurationProperties("app.datasource.taxi.configuration")
+    public DataSource taxiDataSource() {
+        DataSource dataSource = taxiDataSourceProperties().initializeDataSourceBuilder()
+                .type(BasicDataSource.class).build();
+
+
+        return dataSource;
+    }
+
+    @Primary
+    @Bean(name = "taxiEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean taxiEntityManagerFactory(
+            EntityManagerFactoryBuilder builder) {
+        return builder
+                .dataSource(taxiDataSource())
+                .packages("com.taxi.core")
+                .build();
+    }
+
+    @Primary
+    @Bean
+    public PlatformTransactionManager taxiTransactionManager(
+            final @Qualifier("taxiEntityManagerFactory") LocalContainerEntityManagerFactoryBean taxiEntityManagerFactory) {
+        return new JpaTransactionManager(taxiEntityManagerFactory.getObject());
+    }
+
+
+
+}
