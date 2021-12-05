@@ -33,6 +33,8 @@ public class UserEntity implements Serializable {
     @Column(unique = true)
     private String mail;
 
+    @Column
+    private String valid;
 
 
 

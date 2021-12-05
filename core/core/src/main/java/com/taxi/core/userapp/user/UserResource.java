@@ -16,4 +16,9 @@ public class UserResource {
     public ResponseEntity<Boolean> userSignUp(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.signup(userDTO));
     }
+
+    @PostMapping(path = "/login")
+    public ResponseEntity<UserDTO> userLogin(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.login(userDTO));
+    }
 }

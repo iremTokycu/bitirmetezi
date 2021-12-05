@@ -11,4 +11,6 @@ public class DriverDTO {
     private String password;
     private String tcnumber;
     private String platenumber;
+    private String mail;
+    private String valid;
 }

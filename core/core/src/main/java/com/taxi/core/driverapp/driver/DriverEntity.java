@@ -1,16 +1,19 @@
 package com.taxi.core.driverapp.driver;
 
 import lombok.Data;
+import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@ToString
 @Entity
 @Data
+@Table
 public class DriverEntity {
+
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tintin_generator")
+    @SequenceGenerator(name = "tintin_generator", sequenceName = "tintin_seq", allocationSize = 50)
     private Long id;
     @Column
     private String name;
@@ -24,4 +27,8 @@ public class DriverEntity {
     private String tcnumber;
     @Column
     private String platenumber;
+    @Column
+    private String mail;
+    @Column
+    private String valid;
 }

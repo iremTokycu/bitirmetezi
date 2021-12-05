@@ -4,6 +4,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Base64;
+
 
 @Transactional
 @Service
@@ -58,5 +60,27 @@ public class UserService {
         }
 
         return Boolean.FALSE;
+    }
+
+    public String createToken(String mail, String password) {
+        String tokenString = mail + ":" + password;
+        return "Basic " + Base64.getEncoder().encodeToString(tokenString.getBytes());
+    }
+
+
+    @Transactional
+    public UserDTO login(UserDTO userDTO) {
+
+        UserEntity userEntity = userEntityRepository.findByMail(userDTO.getMail());
+
+        if(userEntity != null) {
+            String token = createToken(userEntity.getMail(), userEntity.getPassword());
+            userEntity.setValid(token);
+            userDTO.setValid(token);
+            userEntityRepository.save(userEntity);
+            return userDTO;
+        }
+
+        return null;
     }
 }
