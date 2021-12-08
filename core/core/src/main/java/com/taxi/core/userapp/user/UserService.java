@@ -1,4 +1,5 @@
 package com.taxi.core.userapp.user;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -40,12 +41,12 @@ public class UserService {
         return userEntityRepository.findByMail(mail);
     }
 
-    public UserEntity getCurrentUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public UserDTO getCurrentUser() {
+        String mail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        UserEntity userEntity = userEntityRepository.findByUsername(username);
+        UserEntity userEntity = userEntityRepository.findByMail(mail);
 
-        return userEntity;
+        return UserMapperImpl.toDTO(userEntity);
     }
 
     @Transactional
@@ -62,6 +63,7 @@ public class UserService {
         return Boolean.FALSE;
     }
 
+    @Transactional
     public String createToken(String mail, String password) {
         String tokenString = mail + ":" + password;
         return "Basic " + Base64.getEncoder().encodeToString(tokenString.getBytes());

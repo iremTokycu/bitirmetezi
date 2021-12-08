@@ -1,6 +1,6 @@
 package com.taxi.core.request;
 
-import com.taxi.core.driverapp.driver.DriverEntity;
+
 import com.taxi.core.userapp.user.UserEntity;
 import lombok.Data;
 
@@ -17,9 +17,6 @@ public class RequestEntity {
     @JoinColumn(name = "userid")
     private UserEntity userEntity;
 
-    @OneToOne
-    @JoinColumn(name = "driverid")
-    private DriverEntity driverEntity;
 
 
 }

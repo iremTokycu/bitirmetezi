@@ -1,6 +1,5 @@
 package com.taxi.core.userapp.userhistory;
 
-import com.taxi.core.driverapp.driver.DriverEntity;
 import com.taxi.core.userapp.user.UserEntity;
 
 import javax.persistence.Column;
